@@ -1,0 +1,31 @@
+/*
+ *Copyright (c) 2012 Robin Malburn
+ *See the file license.txt for copying permission.
+*/
+{
+    "name" : "Wordcloudify",
+    "version" : "1.0",
+    "manifest_version" : 2,
+    "description" : "Generate a word cloud for any element on a page.",
+    "icons" : {
+      "16" : "cloud_off_16.png",
+      "48" : "cloud_off_48.png",
+      "128" : "cloud_off_128.png"
+    },
+    "background" : {
+        "persistent" : false,
+        "scripts" : ["background.js"]
+    },
+    "browser_action" : {
+        "default_title" : "Wordcloudify",
+        "default_icon" : {
+         "19" : "cloud_off_19.png",
+         "38" : "cloud_off_38.png"
+        }
+    },
+    "permissions" : [
+        "<all_urls>",
+        "tabs"
+    ],
+    "incognito" : "split"
+}
