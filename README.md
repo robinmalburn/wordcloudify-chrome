@@ -29,7 +29,7 @@ Usage
 Roadmap
 =======
 ### Options Page
-Allow users to edit / expand the default stop word list and min / max font sizes
+Allow users to edit / expand the default stop word list, set min / max font sizes, set minimum word length and set the maximum number of words to return.
 ### Popup Selector
 Allow the user to choose between "selection mode" or entering their own CSS / jQuery style selector to allow selections, allowing for word clouds that couldn't be generated via the simple click method
 ### Improved Selection Mode
