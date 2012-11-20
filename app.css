@@ -13,42 +13,41 @@
     width: 100%;
     height: 100%;
     position: fixed;
-    top: 0px;
-    left: 0px;
-    right: 0px;
+    top: 0;
+    left: 0;
+    right: 0;
     display:none;
     z-index: 1000;
 }
 
 #wordcloudify-lightbox{
     position: fixed;
-    top: 0;
-    left: 0;
     width: 400px;
-    max-height: 300px;
-    overflow: auto;
+    max-height: 400px;
     background-color: #ffffff;
     padding: 2px;
     border-radius: 10px;
-    display:none;
     z-index: 1001;
 }
 
 #wordcloudify-contents{
+    position:relative;
     width: 396px;
-    max-height: 296px;
-    overflow: auto;
-    background-color: #ffffff;
+    max-height: 396px;
+    background-color:#ffffff;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
-ul.wordcloudify-result{
+ul.wordcloudify-results{
     text-align: center;
     padding: 5px;
     margin: 0;
 }
 
-ul.wordcloudify-result li{
+ul.wordcloudify-results li.wordcloudify-item{
     display:inline;
     padding: 5px;
-    margin: 0;
+    margin: 2px;
+    vertical-align: middle;
 }

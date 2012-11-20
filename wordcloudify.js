@@ -17,43 +17,13 @@
         "them","themselves","then","there","there\'s","these","they","they\'d","they\'ll","they\'re","they\'ve","this","those","through","to","too","under","until","up","very","was","wasn\'t"
         ,"we","we\'d","we\'ll","we\'re","we\'ve","were","weren\'t","what","what\'s","when","when\'s","where","where\'s","which","while","who","who\'s","whom","why","why\'s","with","won\'t","would"
         ,"wouldn\'t","you","you\'d","you\'ll","you\'re","you\'ve","your","yours","yourself","yourselves"],
+        "stop_words_extra" : [],
         "cloud_limit" : 20,
         "min_length" : 2,
         "min_font" : 0.75,
         "max_font" : 2.25,
         "font_unit" : "em"
     };
-    
-    var overlay = $("<div />", {
-        "id" : "wordcloudify-overlay"
-    });
-                
-    var lightbox = $("<div />", {
-        "id" : "wordcloudify-lightbox"
-    });
-            
-    var lightbox_contents = $("<div />",{
-        "id" : "wordcloudify-contents"
-    });
-    
-    /**
-     * Get the x and y cordinates to centre the lightbox
-     * @var number width
-     * @var number height
-     * @returns object
-     */
-    function get_centre_x_y(width, height){
-        var page_height = $(window).height();
-        var page_width = $(window).width();
-        
-        var x_pos = (page_width / 2) - (width / 1.9);
-        var y_pos = (page_height / 2) - (height / 1.9);
-        
-        return {
-            x : x_pos,
-            y : y_pos
-        };
-    }
     
     /**
      * Sort array by word weight, or alphabetical if words share weight
@@ -125,18 +95,25 @@
     
     var methods = {
         init : function(options){
-
+            
             var settings = $.extend(true, {}, defaults, options);
             
             settings.stop_words = settings.stop_words.sort(array_sort_stop_words);
             
             return this.each(function(){
-                $(this).data("wordcloudify.settings", settings);
+                $(this).data("wordcloudify", {
+                    "original" : $(this).clone(true), 
+                    "settings" : settings
+                });
             });
         },
         render : function(selector){
             
-            var settings = $(this).data("wordcloudify.settings") || defaults;
+            if(this.data("wordcloudify") === undefined){
+                methods.init.call(this);
+            }
+            
+            var settings = this.data("wordcloudify").settings;
             
             settings.stop_words = settings.stop_words.sort(array_sort_stop_words);
             
@@ -151,6 +128,11 @@
             if(typeof settings.stop_words === "object" && settings.stop_words.length > 0){
                 var stop_words_regex = new RegExp("\\b("+settings.stop_words.join("|")+")\\b", "gi");
                 text = text.replace(stop_words_regex, "");
+            }
+            
+            if(typeof settings.stop_words_extra === "object" && settings.stop_words_extra.length > 0){
+                var stop_words_extra_regex = new RegExp("\\b("+settings.stop_words_extra.join("|")+")\\b", "gi");
+                text = text.replace(stop_words_extra_regex, "");
             }
         
             var words = text.match(/\b[a-z]+('[a-z])?\b/gi);
@@ -189,11 +171,6 @@
                     }
                 }
             }
-            
-            lightbox.append(lightbox_contents);
-            overlay.append(lightbox);
-            $("body").append(overlay);
-
             var output = "";
         
             if(typeof results === "object" && results.length > 0){
@@ -204,9 +181,9 @@
                 
                 results = results.sort(array_sort_random);
                             
-                output += "<ul class='wordcloudify-result'>"
+                output += "<ul class='wordcloudify-results'>"
                 for(var word in results){
-                    output += "<li style='font-size:"+(settings.min_font+(font_step*(results[word].weight-min_val)))+settings.font_unit+"'>"+results[word].word+" </li>"
+                    output += "<li class='wordcloudify-item' style='font-size:"+(settings.min_font+(font_step*(results[word].weight-min_val)))+settings.font_unit+"'>"+results[word].word+" </li>"
                 }
                 output += "</ul>"
             }
@@ -214,41 +191,16 @@
                 output = "No valid words";
             }
                 
-            lightbox_contents.html(output);
-                
-            $("body").append(lightbox);
-        
-            var coords = get_centre_x_y(lightbox.width(), lightbox.height());
-        
-            lightbox.css({
-                "top" : coords.y,
-                "left" : coords.x
+            return this.each(function(){
+                $(this).html(output);
             });
-
-            overlay.fadeIn(
-                "fast", 
-                function(){ 
-                    lightbox.fadeIn("fast"); 
-                });
-    
-            $("#wordcloudify-overlay").on("click.wordcloudify", methods.destroy);
-            
-            return this;
         },
         destroy : function(){
-            $("#wordcloudify-lightbox").fadeOut("fast", function(){
-                $("#wordcloudify-lightbox").remove();
-                $("#wordcloudify-overlay").fadeOut("fast", function(){
-                    $("#wordcloudify-overlay").remove();
-                    $("#wordcloudify-overlay").off("click.wordcloudify");
-                    $("body").trigger("removed.wordcloudify");
-                });
-            });
-
-            
-            
-
-                
+            return this.each(function(){
+                if($(this).data("wordcloudify") !== undefined && $(this).data("wordcloudify").original !== undefined){
+                    $(this).replaceWith($(this).data("wordcloudify").original);
+                }
+            })
         }
     };
 
