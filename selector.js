@@ -115,6 +115,7 @@ selector.methods = {
         selector.objects.overlay.off(".wordcloudify-selector");
 
         selector.objects.overlay.remove();
+        selector.objects.lightbox.remove();
     },
     center_elem : function(el){
         "use strict";
